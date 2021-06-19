@@ -2,13 +2,14 @@ from django.core.management.base import BaseCommand
 from service import models
 import os
 import json
+from tqdm import tqdm
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         models.Drug.objects.all().delete()
         models.Bad.objects.all().delete()
-        for i in os.listdir('items'):
+        for i in tqdm(os.listdir('items'), desc="Создаём модели"):
             with open(f'items/{i}', 'r') as f:
                 data = json.load(f)
             drug_models = []
