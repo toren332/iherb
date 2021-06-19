@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+import json
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -80,6 +81,8 @@ class DrugKinds(APIView):
     def get(request):
         ac = request.GET.get('ac')
         data = Drug.objects.values_list('name', flat=True).distinct()
+        with open('drug_kinds.json', 'w') as f:
+            json.dump(data,f, ensure_ascii=False, indent=4)
         if ac is not None:
             data = [x for x in data if x[:len(ac)].lower()==ac.lower()]
         return Response(sorted(data), status=status.HTTP_200_OK)
