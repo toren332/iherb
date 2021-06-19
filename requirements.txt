@@ -6,3 +6,6 @@ pillow==8.0.1
 django-request-logging
 django_better_admin_arrayfield
 tqdm
+pandas
+xlrd
+openpyxl
