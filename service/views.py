@@ -29,6 +29,22 @@ class BadViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Bad.objects.all().order_by('pk')
     pagination_class = StandardResultsSetPagination
 
+    def get_queryset(self):
+        qs = self.queryset
+        category = self.request.GET.get('category')
+        drug = self.request.GET.get('drug')
+        q = self.request.GET.get('q')
+        code = self.request.GET.get('code')
+        if category is not None:
+            qs = qs.filter(categories__contains=[category])
+        if drug is not None:
+            qs = qs.filter(drugs__name__contains=drug)
+        if q is not None:
+            qs = qs.filter(name__contains=q)
+        if code is not None:
+            qs = qs.filter(qcode=code)
+        return qs
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -48,7 +64,11 @@ class DrugKinds(APIView):
 
     @staticmethod
     def get(request):
-        return Response(Drug.objects.values_list('name', flat=True).distinct(), status=status.HTTP_200_OK)
+        ac = request.GET.get('ac')
+        data = Drug.objects.values_list('name', flat=True).distinct()
+        if ac is not None:
+            data = [x for x in data if x[:len(ac)].lower()==ac.lower()]
+        return Response(sorted(data), status=status.HTTP_200_OK)
 
 
 class CategoriesKinds(APIView):
@@ -56,6 +76,9 @@ class CategoriesKinds(APIView):
 
     @staticmethod
     def get(request):
-        data = set([item for sublist in Bad.objects.values_list('categories', flat=True).distinct() for item in sublist])
-        return Response(data, status=status.HTTP_200_OK)
+        ac = request.GET.get('ac')
+        data = list(set([item for sublist in Bad.objects.values_list('categories', flat=True).distinct() for item in sublist]))
+        if ac is not None:
+            data = [x for x in data if x[:len(ac)].lower() == ac.lower()]
+        return Response(sorted(data), status=status.HTTP_200_OK)
 

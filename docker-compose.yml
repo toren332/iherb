@@ -33,7 +33,7 @@ services:
     expose:
       - "5432"
 
-# docker exec -it cl_django python manage.py migrate
+# docker exec -it iherb_django python manage.py migrate
 # docker exec -it cl_django python manage.py createsuperuser
 # docker exec -it cl_django python manage.py collectstatic
 #gunicorn cl.wsgi:application --bind 0.0.0.0:8001
