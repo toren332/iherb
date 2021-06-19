@@ -82,7 +82,7 @@ class DrugKinds(APIView):
         ac = request.GET.get('ac')
         data = Drug.objects.values_list('name', flat=True).distinct()
         with open('drug_kinds.json', 'w') as f:
-            json.dump(data,f, ensure_ascii=False, indent=4)
+            json.dump(list(data) ,f, ensure_ascii=False, indent=4)
         if ac is not None:
             data = [x for x in data if x[:len(ac)].lower()==ac.lower()]
         return Response(sorted(data), status=status.HTTP_200_OK)
