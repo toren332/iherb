@@ -4,3 +4,4 @@ djangorestframework==3.12.1
 psycopg2-binary==2.8.6
 pillow==8.0.1
 django-request-logging
+django_better_admin_arrayfield
