@@ -18,8 +18,22 @@ def fuck_data(data):
     for i in data:
         drug_count = i.pop('drug_count')
         el_drugs = i['drugs']
+        drugs_rating = []
         for j in el_drugs:
+            articles_rating = []
             j['count'] = drug_count.get(j['name'], '-')
+            for k in j['articles']:
+                articles_rating.append(k['rating'])
+            try:
+                j['rating'] = sum(articles_rating)/len(articles_rating)
+            except:
+                j['rating'] = None
+            drugs_rating.append(j['rating'])
+        drugs_rating = [x for x in drugs_rating if x is not None]
+        try:
+            i['rating'] = sum(drugs_rating) / len(drugs_rating)
+        except:
+            i['rating'] = None
     return data
 
 
